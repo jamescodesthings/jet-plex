@@ -84,7 +84,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ${LIBRARY_DIR}/radarr:/config
-      - ${DOWNLOAD_DIR}:/downloads
+      - ${DOWNLOAD_DIR}:/data/downloads
       - ${FILMS_DIR}:/films
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
@@ -105,7 +105,7 @@ services:
       - TZ=${TZ}
     volumes:
       - ${LIBRARY_DIR}/sonarr:/config
-      - ${DOWNLOAD_DIR}:/downloads
+      - ${DOWNLOAD_DIR}:/data/downloads
       - ${TV_DIR}:/tv
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
