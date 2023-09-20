@@ -1,0 +1,10 @@
+[Unit]
+Description=Update the media server
+Requires=mediaserver.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart mediaserver.service
+
+[Install]
+WantedBy=multi-user.target

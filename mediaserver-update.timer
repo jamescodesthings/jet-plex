@@ -1,0 +1,9 @@
+[Unit]
+Description=Update the media server twice a week
+
+[Timer]
+OnCalendar=Tue,Fri *-*-* 4:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

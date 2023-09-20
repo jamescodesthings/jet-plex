@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+sudo systemctl disable mediaserver-update.timer
+sudo systemctl disable mediaserver.service
+
+sudo rm -f /etc/systemd/system/mediaserver*

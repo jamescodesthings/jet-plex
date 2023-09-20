@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+sudo cp -f ./mediaserver.service /etc/systemd/system/mediaserver.service
+sudo cp -f ./mediaserver-update.service /etc/systemd/system/mediaserver-update.service
+sudo cp -f ./mediaserver-update.timer /etc/systemd/system/mediaserver-update.timer
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now mediaserver-update.timer
+sudo systemctl enable --now mediaserver.service
