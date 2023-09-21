@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
-sudo systemctl restart mediaserver.service
+docker-compose down
+docker-compose up -d

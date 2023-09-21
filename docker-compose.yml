@@ -1,6 +1,5 @@
 version: "3"
 services:
-# Public
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
@@ -42,38 +41,48 @@ services:
       - 32413:32413/udp
       - 32414:32414/udp
       - 32469:32469
-
-# # Private
-#   vpn:
-#     image: ghcr.io/bubuntux/nordvpn
-#     cap_add:
-#       - NET_ADMIN
-#       - NET_RAW
-#     environment:
-#       - TOKEN=${NORD_TOKEN}
-#       - CONNECT=United_Kingdom
-#       - TECHNOLOGY=NordLynx
-#       - NETWORK=192.168.178.0/24
-#     sysctls:
-#       - net.ipv4.conf.all.src_valid_mark=1
-#     restart: unless-stopped
-#     ports:
-#       - 6500:6500 # alldebrid
-#       - 7878:7878 # radarr
-#       - 8989:8989 # sonarr
-#       # - 5055:5055 # overseer
-#       # - 3579:3579 # ombi
-#       # - 9117:9117 # jackett
-      
-  alldebrid:
-    container_name: alldebrid
-    volumes:
-      - ${DOWNLOAD_DIR}:/data/downloads
-      - ${LIBRARY_DIR}/rdt-client/:/data/db
-    image: rogerfar/rdtclient
-    restart: unless-stopped
+  vpn:
+    container_name: vpn
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
     ports:
-      - 6500:6500 
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+      - 7878:7878 # radarr
+      - 8989:8989 # sonarr
+      - 8191:8191 # flaresolverr
+      - 9117:9117 # jackett
+      - 5055:5055 # overseer
+    environment:
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - OPENVPN_USER="$NORD_USER"
+      - OPENVPN_PASSWORD="$NORD_PASS"
+      - SERVER_COUNTRIES=$NORD_COUNTRY
+      - VPN_TYPE=openvpn
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - FIREWALL_OUTBOUND_SUBNETS=192.168.178.0/24
+    restart: unless-stopped
+
+  transmission:
+    image: linuxserver/transmission:latest
+    container_name: transmission
+    environment:
+      - PUID=$PUID
+      - UGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $LIBRARY_DIR/transmission:/config
+      - ${DOWNLOAD_DIR}:/downloads
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    depends_on:
+      - vpn
+    network_mode: service:vpn
 
   radarr:
     image: ghcr.io/linuxserver/radarr:latest
@@ -84,17 +93,15 @@ services:
       - TZ=${TZ}
     volumes:
       - ${LIBRARY_DIR}/radarr:/config
-      - ${DOWNLOAD_DIR}:/data/downloads
+      - ${DOWNLOAD_DIR}:/downloads
       - ${FILMS_DIR}:/films
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
     depends_on:
-      # - vpn
-      - alldebrid
-    # network_mode: service:vpn
-    ports:
-     - 7878:7878
+      - vpn
+      - transmission
+    network_mode: service:vpn
 
   sonarr:
     image: ghcr.io/linuxserver/sonarr:latest
@@ -105,19 +112,16 @@ services:
       - TZ=${TZ}
     volumes:
       - ${LIBRARY_DIR}/sonarr:/config
-      - ${DOWNLOAD_DIR}:/data/downloads
+      - ${DOWNLOAD_DIR}:/downloads
       - ${TV_DIR}:/tv
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
     depends_on:
-      # - vpn
-      - alldebrid
-    # network_mode: service:vpn
-    ports:
-      - 8989:8989
+      - vpn
+      - transmission
+    network_mode: service:vpn
   
-  # Flaresolverr
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
@@ -132,18 +136,17 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
     depends_on:
-      # - vpn
+      - vpn
       - radarr
       - sonarr
-    # network_mode: service:vpn
+    network_mode: service:vpn
 
-  # Jackett
   jackett:
     image: ghcr.io/linuxserver/jackett:latest
     container_name: jackett
     environment:
       - PUID=$PUID
-      - PGID=$PUID
+      - PGID=$PGID
       - TZ=$TZ
       - AUTO_UPDATE=true
       - RUN_OPTS=
@@ -153,11 +156,9 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
     depends_on:
-      # - vpn
+      - vpn
       - flaresolverr
-    # network_mode: service:vpn
-    ports:
-      - 9117:9117 # jackett
+    network_mode: service:vpn
 
   overseerr:
     image: sctx/overseerr:latest
@@ -170,31 +171,7 @@ services:
       - ${LIBRARY_DIR}/overseerr:/app/config
     restart: unless-stopped
     depends_on:
-      # - vpn
-      - alldebrid
+      - vpn
       - sonarr
       - radarr
-    # network_mode: service:vpn
-    ports:
-      - 5055:5055 # overseer
-
-  ombi: #media requesting tool
-    container_name: ombi
-    image: lscr.io/linuxserver/ombi:latest
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - UMASK=002
-      - DEBUG=no
-    volumes:
-      - ${LIBRARY_DIR}/ombi:/config
-    restart: unless-stopped
-    depends_on:
-      # - vpn
-      - alldebrid
-      - sonarr
-      - radarr
-    # network_mode: service:vpn
-    ports:
-      - 3579:3579 # ombi
+    network_mode: service:vpn
