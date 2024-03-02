@@ -11,6 +11,8 @@ ExecStop=/usr/bin/docker-compose down
 WorkingDirectory=/home/james/projects/jet-plex
 Restart=on-failure
 TimeoutStartSec=300
+User=james
+Group=james
 
 [Install]
 WantedBy=multi-user.target
