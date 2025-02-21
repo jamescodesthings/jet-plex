@@ -202,6 +202,21 @@ services:
       - $DOWNLOAD_DIR:/downloads
     command: '-s "Downloads;/downloads;yes;no;no;james" -u "$SAMBA_USER;$SAMBA_PASS" -p'
 
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    container_name: filebrowser
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${ROOT_DIR}:/srv
+      - ${LIBRARY_DIR}/filebrowser/filebrowser.db:/database/filebrowser.db
+      - ${LIBRARY_DIR}/filebrowser//settings.json:/config/settings.json
+    ports:
+      - 3002:80
+    restart: unless-stopped
+
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
