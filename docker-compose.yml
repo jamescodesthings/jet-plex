@@ -61,7 +61,10 @@ services:
     volumes:
       - ${LIBRARY_DIR}/plex:/config      
       - ${FILMS_DIR}:/films
+      - ${CHRISTIAN_MOVIES_DIR}:/christian-movies
+      - ${GHIBLI_DIR}:/ghibli
       - ${TV_DIR}:/tv
+      - ${TAKEDOWN_DIR}:/takedown
     depends_on:
       - radarr
       - sonarr
@@ -117,7 +120,7 @@ services:
       - transmission
     ports:
       - 8989:8989
-  
+
   # Flaresolverr
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
