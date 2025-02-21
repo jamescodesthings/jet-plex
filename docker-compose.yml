@@ -213,6 +213,7 @@ services:
       - ${ROOT_DIR}:/srv
       - ${LIBRARY_DIR}/filebrowser/filebrowser.db:/database/filebrowser.db
       - ${LIBRARY_DIR}/filebrowser//settings.json:/config/settings.json
+      - ./19-fix_80_bind:/etc/cont-init.d/19-fix_80_bind # this fixes the port 80 non-bind issue
     ports:
       - 3002:80
     restart: unless-stopped

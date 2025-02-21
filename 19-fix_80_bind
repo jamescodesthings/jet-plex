@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+
+# fix bind 80 issue
+apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/bin/filebrowser
