@@ -49,9 +49,6 @@ services:
     ports:
       - 8888:8000 # Pyload
       - 9666:9666 # Pyload: optional
-    network_mode: service:vpn
-    depends_on:
-      - vpn
     restart: unless-stopped
 
   heimdall:
