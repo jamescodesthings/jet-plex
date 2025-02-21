@@ -45,7 +45,10 @@ services:
       - TZ=$TZ
     volumes:
       - $LIBRARY_DIR/pyload-ng:/config
-      - $DOWNLOAD_DIR:/downloads:/downloads
+      - $DOWNLOAD_DIR:/downloads
+    network_mode: service:vpn
+    depends_on:
+      - vpn
     ports:
       - 8000:8000
       - 9666:9666 #optional
