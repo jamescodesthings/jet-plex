@@ -45,7 +45,7 @@ services:
       - TZ=$TZ
     volumes:
       - $LIBRARY_DIR/pyload-ng:/config
-      - $DOWNLOAD_DIR:/downloads
+      - $DOWNLOAD_DIR/pyload:/downloads
     ports:
       - 8888:8000 # Pyload
       - 9666:9666 # Pyload: optional
