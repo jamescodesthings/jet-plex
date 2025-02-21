@@ -7,6 +7,8 @@ services:
       - NET_ADMIN
     ports:
       - 9091:9091 # Transmission
+      - 8000:8000 # Pyload
+      - 9666:9666 # Pyload: optional
       - 51413:51413
       - 51413:51413/udp
     environment:
@@ -49,9 +51,6 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
-    ports:
-      - 8000:8000
-      - 9666:9666 #optional
     restart: unless-stopped
 
   heimdall:
@@ -117,7 +116,7 @@ services:
       - vpn
       - transmission
     ports:
-     - 7878:7878
+      - 7878:7878
 
   sonarr:
     image: ghcr.io/linuxserver/sonarr:latest
@@ -156,26 +155,6 @@ services:
     depends_on:
       - radarr
       - sonarr
-
-  # Jackett
-  jackett:
-    image: ghcr.io/linuxserver/jackett:latest
-    container_name: jackett
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - AUTO_UPDATE=true
-      - RUN_OPTS=
-    volumes:
-      - $LIBRARY_DIR/jackett:/config
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
-    depends_on:
-      - flaresolverr
-    ports:
-      - 9117:9117 # jackett
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
@@ -224,3 +203,18 @@ services:
     volumes:
       - $DOWNLOAD_DIR:/downloads
     command: '-s "Downloads;/downloads;yes;no;no;james" -u "$SAMBA_USER;$SAMBA_PASS" -p'
+
+  doublecommander:
+    image: lscr.io/linuxserver/doublecommander:latest
+    container_name: doublecommander
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${LIBRARY_DIR}/doublecommander:/config
+      - ${ROOT_DIR}:/data
+    ports:
+      - 3000:3000
+      - 3001:3001
+    restart: unless-stopped
