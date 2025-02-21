@@ -7,8 +7,6 @@ services:
       - NET_ADMIN
     ports:
       - 9091:9091 # Transmission
-      - 8000:8000 # Pyload
-      - 9666:9666 # Pyload: optional
       - 51413:51413
       - 51413:51413/udp
     environment:
@@ -48,6 +46,9 @@ services:
     volumes:
       - $LIBRARY_DIR/pyload-ng:/config
       - $DOWNLOAD_DIR:/downloads
+    ports:
+      - 8888:8000 # Pyload
+      - 9666:9666 # Pyload: optional
     network_mode: service:vpn
     depends_on:
       - vpn
@@ -207,6 +208,8 @@ services:
   doublecommander:
     image: lscr.io/linuxserver/doublecommander:latest
     container_name: doublecommander
+    security_opt:
+      - seccomp:unconfined
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
