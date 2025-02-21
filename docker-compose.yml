@@ -36,6 +36,21 @@ services:
       - vpn
     restart: unless-stopped
 
+  pyload-ng:
+    image: lscr.io/linuxserver/pyload-ng:latest
+    container_name: pyload-ng
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+    volumes:
+      - $LIBRARY_DIR/pyload-ng:/config
+      - $DOWNLOAD_DIR:/downloads:/downloads
+    ports:
+      - 8000:8000
+      - 9666:9666 #optional
+    restart: unless-stopped
+
   heimdall:
     image: lscr.io/linuxserver/heimdall:latest
     container_name: heimdall
@@ -59,7 +74,7 @@ services:
       - TZ=${TZ}
       - VERSION=docker
     volumes:
-      - ${LIBRARY_DIR}/plex:/config      
+      - ${LIBRARY_DIR}/plex:/config
       - ${FILMS_DIR}:/films
       - ${CHRISTIAN_MOVIES_DIR}:/christian-movies
       - ${GHIBLI_DIR}:/ghibli
