@@ -5,5 +5,5 @@ sudo cp -f ./mediaserver-update.service /etc/systemd/system/mediaserver-update.s
 sudo cp -f ./mediaserver-update.timer /etc/systemd/system/mediaserver-update.timer
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now mediaserver-update.timer
-sudo systemctl enable --now mediaserver.service
+sudo systemctl enable mediaserver-update.timer
+sudo systemctl enable mediaserver.service

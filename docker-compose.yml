@@ -80,6 +80,7 @@ services:
       - ${GHIBLI_DIR}:/ghibli
       - ${TV_DIR}:/tv
       - ${TAKEDOWN_DIR}:/takedown
+      - ${OTHERS_DIR}:/others
     depends_on:
       - radarr
       - sonarr

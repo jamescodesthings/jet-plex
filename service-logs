@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-journalctl -e -u mediaserver.service
+journalctl -e -u mediaserver.service -f

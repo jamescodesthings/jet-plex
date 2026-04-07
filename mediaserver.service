@@ -10,7 +10,7 @@ ExecStart=/usr/bin/docker-compose up
 ExecStop=/usr/bin/docker-compose down
 WorkingDirectory=/home/james/projects/jet-plex
 Restart=on-failure
-TimeoutStartSec=300
+TimeoutStartSec=3600
 User=james
 Group=james
 
