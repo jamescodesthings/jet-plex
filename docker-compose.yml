@@ -1,5 +1,23 @@
 version: "3"
 services:
+  server:
+    image: docker.gitea.com/gitea:latest
+    container_name: gitea
+    environment:
+      USER: james
+      USER_UID: 1000
+      USER_GID: 1000
+    restart: always
+    networks:
+      - gitea
+    volumes:
+      - $GIT_DIR:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "222:22"
+
   vpn:
     container_name: vpn
     image: qmcgaw/gluetun
@@ -76,10 +94,7 @@ services:
     volumes:
       - ${LIBRARY_DIR}/plex:/config
       - ${FILMS_DIR}:/films
-      - ${CHRISTIAN_MOVIES_DIR}:/christian-movies
-      - ${GHIBLI_DIR}:/ghibli
       - ${TV_DIR}:/tv
-      - ${TAKEDOWN_DIR}:/takedown
       - ${OTHERS_DIR}:/others
     depends_on:
       - radarr
@@ -137,24 +152,6 @@ services:
     ports:
       - 8989:8989
 
-  # Flaresolverr
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=hcaptcha-solver
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
-    depends_on:
-      - radarr
-      - sonarr
-
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -202,36 +199,3 @@ services:
     volumes:
       - $DOWNLOAD_DIR:/downloads
     command: '-s "Downloads;/downloads;yes;no;no;james" -u "$SAMBA_USER;$SAMBA_PASS" -p'
-
-  filebrowser:
-    image: filebrowser/filebrowser:s6
-    container_name: filebrowser
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${ROOT_DIR}:/srv
-      - ${LIBRARY_DIR}/filebrowser/filebrowser.db:/database/filebrowser.db
-      - ${LIBRARY_DIR}/filebrowser//settings.json:/config/settings.json
-      - ./19-fix_80_bind:/etc/cont-init.d/19-fix_80_bind # this fixes the port 80 non-bind issue
-    ports:
-      - 3002:80
-    restart: unless-stopped
-
-  doublecommander:
-    image: lscr.io/linuxserver/doublecommander:latest
-    container_name: doublecommander
-    security_opt:
-      - seccomp:unconfined
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${LIBRARY_DIR}/doublecommander:/config
-      - ${ROOT_DIR}:/data
-    ports:
-      - 3000:3000
-      - 3001:3001
-    restart: unless-stopped
