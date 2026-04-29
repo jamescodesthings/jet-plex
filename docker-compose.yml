@@ -1,20 +1,20 @@
 version: "3"
 services:
-  server:
-    image: docker.gitea.com/gitea:latest
-    container_name: gitea
-    environment:
-      USER: james
-      USER_UID: 1000
-      USER_GID: 1000
-    restart: always
-    volumes:
-      - $GIT_DIR:/data
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "3000:3000"
-      - "222:22"
+  # server:
+  #   image: docker.gitea.com/gitea:latest
+  #   container_name: gitea
+  #   environment:
+  #     USER: james
+  #     USER_UID: 1000
+  #     USER_GID: 1000
+  #   restart: always
+  #   volumes:
+  #     - $GIT_DIR:/data
+  #     - /etc/timezone:/etc/timezone:ro
+  #     - /etc/localtime:/etc/localtime:ro
+  #   ports:
+  #     - "3000:3000"
+  #     - "222:22"
 
   vpn:
     container_name: vpn
@@ -196,4 +196,5 @@ services:
     tty: true
     volumes:
       - $DOWNLOAD_DIR:/downloads
-    command: '-s "Downloads;/downloads;yes;no;no;james" -u "$SAMBA_USER;$SAMBA_PASS" -p'
+    command: "-s \"Downloads;/downloads;yes;no;no;james\" -u
+      \"$SAMBA_USER;$SAMBA_PASS\" -p"
