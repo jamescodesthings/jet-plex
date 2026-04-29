@@ -1,21 +1,5 @@
 version: "3"
 services:
-  # server:
-  #   image: docker.gitea.com/gitea:latest
-  #   container_name: gitea
-  #   environment:
-  #     USER: james
-  #     USER_UID: 1000
-  #     USER_GID: 1000
-  #   restart: always
-  #   volumes:
-  #     - $GIT_DIR:/data
-  #     - /etc/timezone:/etc/timezone:ro
-  #     - /etc/localtime:/etc/localtime:ro
-  #   ports:
-  #     - "3000:3000"
-  #     - "222:22"
-
   vpn:
     container_name: vpn
     image: qmcgaw/gluetun
@@ -45,11 +29,31 @@ services:
       - PGID=$PGID
       - TZ=$TZ
     volumes:
-      - $LIBRARY_DIR/transmission:/config
-      - $DOWNLOAD_DIR:/downloads
+      - ${LIBRARY_DIR}/transmission:/config
+      - ${DOWNLOAD_DIR}:/downloads
     network_mode: service:vpn
     depends_on:
       - vpn
+    restart: unless-stopped
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
+    container_name: flaresolverr
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_FILE=${LOG_FILE:-none}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
+      - TZ=$TZ
+    network_mode: service:vpn
+    depends_on:
+      - vpn
+    ports:
+      - 8191:8191
+    volumes:
+      - ${LIBRARY_DIR}/flaresolver:/config
     restart: unless-stopped
 
   pyload-ng:
@@ -150,26 +154,11 @@ services:
     ports:
       - 8989:8989
 
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr:latest
-    container_name: flaresolverr
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - LOG_FILE=${LOG_FILE:-none}
-      - LOG_HTML=${LOG_HTML:-false}
-      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
-      - TZ=$TZ
-    ports:
-      - 8191:8191
-    volumes:
-      - ${LIBRARY_DIR}/flaresolver:/config
-    restart: unless-stopped
-
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    depends_on:
+      - flaresolverr
     environment:
       - PUID=$PUID
       - PGID=$PGID
