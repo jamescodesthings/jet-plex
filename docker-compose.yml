@@ -7,6 +7,7 @@ services:
       - NET_ADMIN
     ports:
       - 9091:9091 # Transmission
+      - 8191:8191 # FlareSolverr
       - 51413:51413
       - 51413:51413/udp
     environment:
@@ -50,8 +51,6 @@ services:
     network_mode: service:vpn
     depends_on:
       - vpn
-    ports:
-      - 8191:8191
     volumes:
       - ${LIBRARY_DIR}/flaresolver:/config
     restart: unless-stopped
