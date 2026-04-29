@@ -183,23 +183,22 @@ services:
       - radarr
     ports:
       - 5055:5055 # overseer
-
-  samba:
-    image: dperson/samba
-    container_name: samba
-    environment:
-      TZ: $TZ
-    ports:
-      - "137:137/udp"
-      - "138:138/udp"
-      - "139:139/tcp"
-      - "445:445/tcp"
-    tmpfs:
-      - /tmp
-    restart: unless-stopped
-    stdin_open: true
-    tty: true
-    volumes:
-      - $DOWNLOAD_DIR:/downloads
-    command: "-s \"Downloads;/downloads;yes;no;no;james\" -u
-      \"$SAMBA_USER;$SAMBA_PASS\" -p"
+  # samba:
+  #   image: dperson/samba
+  #   container_name: samba
+  #   environment:
+  #     TZ: $TZ
+  #   ports:
+  #     - "137:137/udp"
+  #     - "138:138/udp"
+  #     - "139:139/tcp"
+  #     - "445:445/tcp"
+  #   tmpfs:
+  #     - /tmp
+  #   restart: unless-stopped
+  #   stdin_open: true
+  #   tty: true
+  #   volumes:
+  #     - $DOWNLOAD_DIR:/downloads
+  #   command: "-s \"Downloads;/downloads;yes;no;no;james\" -u
+  #     \"$SAMBA_USER;$SAMBA_PASS\" -p"
