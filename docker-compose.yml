@@ -19,7 +19,7 @@ services:
       - PGID=$PGID
       - TZ=$TZ
       - FIREWALL_OUTBOUND_SUBNETS=192.168.178.0/24
-    restart: unless-stopped
+    restart: always
 
   transmission:
     image: lscr.io/linuxserver/transmission:latest
@@ -181,6 +181,22 @@ services:
       - radarr
     ports:
       - 5055:5055 # overseer
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${LIBRARY_DIR}/lidarr:/config
+      - ${MUSIC_DIR}:/music
+      - ${DOWNLOAD_DIR}:/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
   # samba:
   #   image: dperson/samba
   #   container_name: samba
