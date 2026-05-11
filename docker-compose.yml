@@ -13,7 +13,7 @@ services:
       - VPN_SERVICE_PROVIDER=nordvpn
       - OPENVPN_USER="$NORD_USER"
       - OPENVPN_PASSWORD="$NORD_PASS"
-      - SERVER_COUNTRIES=$NORD_COUNTRY
+      - SERVER_COUNTRIES="Netherlands,United States"
       - VPN_TYPE=openvpn
       - PUID=$PUID
       - PGID=$PGID
