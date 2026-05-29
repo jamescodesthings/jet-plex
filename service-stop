@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
-sudo systemctl stop mediaserver.service
+sudo systemctl stop mediaserver.service &
+echo "service stopping, use ./service-logs to check progress, or docker ps/docker stats"

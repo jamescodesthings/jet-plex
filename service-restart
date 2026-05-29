@@ -1,4 +1,7 @@
 #!/usr/bin/env zsh
 
-docker-compose down
-docker-compose up -d
+echo "stopping service"
+sudo systemctl stop mediaservice.service
+echo "service stopped, restarting"
+sudo systemctl start mediaservice.service &
+echo "use ./service-logs to check startup progress"

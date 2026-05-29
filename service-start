@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
-sudo systemctl start mediaserver.service
+sudo systemctl start mediaserver.service &
+echo "service started, use ./service-logs to check progress"
