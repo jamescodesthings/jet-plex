@@ -1,6 +1,22 @@
 #!/usr/bin/env zsh
 
+echo "Disabling services"
 sudo systemctl disable mediaserver-update.timer
+if [[ "$?" != "0" ]]; then
+  echo "could not disable mediaserver-update.timer"
+  exit 1
+fi
 sudo systemctl disable mediaserver.service
+if [[ "$?" != "0" ]]; then
+  echo "could not disable mediaserver.service"
+  exit 1
+fi
 
+echo "Removing service files"
 sudo rm -f /etc/systemd/system/mediaserver*
+if [[ "$?" != "0" ]]; then
+  echo "Deleting the mediaserver files failed, they may already be missing"
+  echo "ls /etc/systemd/system/mediaserver*"
+fi
+
+sudo systemctl daemon-reload

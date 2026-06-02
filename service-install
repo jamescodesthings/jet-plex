@@ -1,9 +1,37 @@
 #!/usr/bin/env zsh
 
+echo "Copying mediaserver files to /etc/systemd/system"
 sudo cp -f ./mediaserver.service /etc/systemd/system/mediaserver.service
+if [[ "$?" != "0" ]]; then
+ echo "Could not copy ./mediaserver.service to /etc/systemd/system"
+ exit 1
+fi
 sudo cp -f ./mediaserver-update.service /etc/systemd/system/mediaserver-update.service
+if [[ "$?" != "0" ]]; then
+ echo "Could not copy ./mediaserver-update.service to /etc/systemd/system"
+ exit 1
+fi
 sudo cp -f ./mediaserver-update.timer /etc/systemd/system/mediaserver-update.timer
+if [[ "$?" != "0" ]]; then
+ echo "Could not copy ./mediaserverupdate-timer to /etc/systemd/system"
+ exit 1
+fi
 
+echo "Reloading systemd daemon"
 sudo systemctl daemon-reload
+if [[ "$?" != "0" ]]; then
+ echo "Reloading daemon failed"
+ exit 1
+fi
+
+echo "enabling services"
 sudo systemctl enable mediaserver-update.timer
+if [[ "$?" != "0" ]]; then
+ echo "Could not enable mediaserver-update.timer"
+ exit 1
+fi
 sudo systemctl enable mediaserver.service
+if [[ "$?" != "0" ]]; then
+ echo "Could not enable mediaserver.service"
+ exit 1
+fi

@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
 
 sudo systemctl stop mediaserver.service &
-echo "service stopping, use ./service-logs to check progress, or docker ps/docker stats"
+if [[ "$?" != "0" ]]; then
+  echo "Service stop failed!"
+else
+  echo "service stopping, use ./service-logs to check progress, or docker ps/docker stats"
+fi

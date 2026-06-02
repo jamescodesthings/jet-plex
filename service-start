@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
 
 sudo systemctl start mediaserver.service &
-echo "service started, use ./service-logs to check progress"
+if [[ "$?" != "0" ]]; then
+  echo "Service start failed."
+else
+  echo "service started, use ./service-logs to check progress"
+fi

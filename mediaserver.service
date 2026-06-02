@@ -1,5 +1,5 @@
 [Unit]
-Description=Launches the media server
+Description=Docker Based Media Server
 Requires=docker.service
 
 [Service]
