@@ -37,10 +37,24 @@ services:
       - ${LIBRARY_DIR}/transmission:/config
       - ${DOWNLOAD_DIR}:/downloads
     network_mode: service:vpn
+    labels:
+      autoheal-app: true
     depends_on:
       vpn:
         condition: service_healthy
     restart: always
+
+  autoheal:
+    deploy:
+      replicas: 1
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: autoheal-app
+    image: willfarrell/autoheal:latest
+    network_mode: none
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:v3.4.6
