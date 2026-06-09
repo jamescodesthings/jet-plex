@@ -21,6 +21,8 @@ services:
       - PGID=$PGID
       - TZ=$TZ
       - FIREWALL_OUTBOUND_SUBNETS=192.168.178.0/24
+      - DOT=off
+      - DNS_ADDRESS=1.1.1.1
     restart: always
 
   transmission:
