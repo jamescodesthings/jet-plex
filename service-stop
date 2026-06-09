@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-sudo systemctl stop mediaserver.service &
+sudo systemctl stop mediaserver.service
 if [[ "$?" != "0" ]]; then
   echo "Service stop failed!"
 else

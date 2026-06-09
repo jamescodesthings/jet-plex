@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-sudo systemctl start mediaserver.service &
+sudo systemctl start mediaserver.service
 if [[ "$?" != "0" ]]; then
   echo "Service start failed."
 else
