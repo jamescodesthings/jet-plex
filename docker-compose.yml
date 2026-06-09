@@ -11,6 +11,9 @@ services:
       - 9091:9091 # Transmission
       - 51413:51413
       - 51413:51413/udp
+      - 8080:8080        # qbittorrent
+      - 6881:6881        # Exposes the qBittorrent Peer TCP traffic
+      - 6881:6881/udp    # Exposes the qBittorrent Peer UDP traffic
     environment:
       - VPN_SERVICE_PROVIDER=nordvpn
       - OPENVPN_USER="$NORD_USER"
@@ -35,6 +38,26 @@ services:
       - PEERPORT=51413
     volumes:
       - ${LIBRARY_DIR}/transmission:/config
+      - ${DOWNLOAD_DIR}:/downloads
+    network_mode: service:vpn
+    labels:
+      autoheal-app: true
+    depends_on:
+      vpn:
+        condition: service_healthy
+    restart: always
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=$PUID
+      - PGID=$PGID
+      - TZ=$TZ
+      - WEBUI_PORT=
+      - TORRENTING_PORT=6881
+    volumes:
+      - ${LIBRARY_DIR}/qbittorrent:/config
       - ${DOWNLOAD_DIR}:/downloads
     network_mode: service:vpn
     labels:
