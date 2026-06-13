@@ -28,25 +28,6 @@ services:
       - DNS_ADDRESS=1.1.1.1
     restart: always
 
-  transmission:
-    image: lscr.io/linuxserver/transmission:latest
-    container_name: transmission
-    environment:
-      - PUID=$PUID
-      - PGID=$PGID
-      - TZ=$TZ
-      - PEERPORT=51413
-    volumes:
-      - ${LIBRARY_DIR}/transmission:/config
-      - ${DOWNLOAD_DIR}:/downloads
-    network_mode: service:vpn
-    labels:
-      autoheal-app: true
-    depends_on:
-      vpn:
-        condition: service_healthy
-    restart: always
-
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -138,9 +119,6 @@ services:
       - ${FILMS_DIR}:/films
       - ${TV_DIR}:/tv
       - ${OTHERS_DIR}:/others
-    depends_on:
-      - radarr
-      - sonarr
     restart: unless-stopped
     ports:
       - 32400:32400
@@ -168,9 +146,6 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
-    depends_on:
-      - vpn
-      - transmission
     ports:
       - 7878:7878
 
@@ -188,9 +163,6 @@ services:
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     restart: unless-stopped
-    depends_on:
-      - vpn
-      - transmission
     ports:
       - 8989:8989
 
@@ -219,43 +191,5 @@ services:
     volumes:
       - ${LIBRARY_DIR}/overseerr:/app/config
     restart: unless-stopped
-    depends_on:
-      - sonarr
-      - radarr
     ports:
       - 5055:5055 # overseer
-
-  lidarr:
-    image: lscr.io/linuxserver/lidarr:latest
-    container_name: lidarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - ${LIBRARY_DIR}/lidarr:/config
-      - ${MUSIC_DIR}:/music
-      - ${DOWNLOAD_DIR}:/downloads
-    ports:
-      - 8686:8686
-    restart: unless-stopped
-
-  # samba:
-  #   image: dperson/samba
-  #   container_name: samba
-  #   environment:
-  #     TZ: $TZ
-  #   ports:
-  #     - "137:137/udp"
-  #     - "138:138/udp"
-  #     - "139:139/tcp"
-  #     - "445:445/tcp"
-  #   tmpfs:
-  #     - /tmp
-  #   restart: unless-stopped
-  #   stdin_open: true
-  #   tty: true
-  #   volumes:
-  #     - $DOWNLOAD_DIR:/downloads
-  #   command: "-s \"Downloads;/downloads;yes;no;no;james\" -u
-  #     \"$SAMBA_USER;$SAMBA_PASS\" -p"
