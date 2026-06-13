@@ -12,8 +12,8 @@ services:
       - 51413:51413
       - 51413:51413/udp
       - 8080:8080        # qbittorrent
-      - 6881:6881        # Exposes the qBittorrent Peer TCP traffic
-      - 6881:6881/udp    # Exposes the qBittorrent Peer UDP traffic
+#      - 6881:6881        # Exposes the qBittorrent Peer TCP traffic
+#      - 6881:6881/udp    # Exposes the qBittorrent Peer UDP traffic
     environment:
       - VPN_SERVICE_PROVIDER=nordvpn
       - OPENVPN_USER="$NORD_USER"
