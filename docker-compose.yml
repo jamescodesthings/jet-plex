@@ -55,16 +55,12 @@ services:
       - 5800:5800
       - 3129:3129 # MyJDownloader
     environment:
-      USER_ID: $PUID
-      GROUP_ID: $PGID
-      TZ: $TZ
       KEEP_APP_RUNNING: true
-      DARK_MODE: true
-      WEB_FILE_MANAGER: true
       MYJDOWNLOADER_DEVICE_NAME: jetplex
+      JDOWNLOADER_HEADLESS: 1
     volumes:
-      - ${LIBRARY_DIR}/jdownloader-2:/config:rw
-      - ${DOWNLOAD_DIR}/jd:/output:rw
+      - "${LIBRARY_DIR}/jd:/config:rw"
+      - "${DOWNLOAD_DIR}/jd:/output:rw"
 
   autoheal:
     container_name: autoheal
