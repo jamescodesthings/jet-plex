@@ -63,8 +63,8 @@ services:
       WEB_FILE_MANAGER: true
       MYJDOWNLOADER_DEVICE_NAME: jetplex
     volumes:
-      - ${LIBRARY_DIR}/jdownloader-2:/config
-      - ${DOWNLOAD_DIR}:/output
+      - ${LIBRARY_DIR}/jdownloader-2:/config:rw
+      - ${DOWNLOAD_DIR}/jd:/output:rw
 
   autoheal:
     container_name: autoheal
