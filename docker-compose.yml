@@ -48,6 +48,25 @@ services:
         condition: service_healthy
     restart: always
 
+  jdownloader-2:
+    image: jlesage/jdownloader-2
+    ports:
+      - 5800:5800
+      - 5900:5900 # VNC
+      - 3129:3129 # MyJDownloader
+    environment:
+      USER_ID: $PUID
+      GROUP_ID: $PGID
+      UMASK: 111
+      TZ: $TZ
+      KEEP_APP_RUNNING: true
+      DARK_MODE: true
+      WEB_FILE_MANAGER: true
+      MYJDOWNLOADER_DEVICE_NAME: jetplex
+    volumes:
+      - ${LIBRARY_DIR}/jdownloader-2:/config
+      - ${DOWNLOAD_DIR}:/output
+
   autoheal:
     deploy:
       replicas: 1
